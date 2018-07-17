@@ -1,17 +1,42 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <upload 
+    :qiniuToken="qiniuToken"
+    :onSuccess="onSuccess"
+    :onError="onError"
+    :onProgress="onProgress"
+    :percent="percent"
+    :path="'123'"
+    >上传</upload>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import Upload from './components/upload.vue'
 
 export default {
   name: 'app',
+  data(){
+    return {
+      percent:0,
+      qiniuToken:'XL7EoDlOL21v8W0IukwUFIHuqsms12UAqrh3YUFB:EgU2KI82fCY46wMj4MF2p2mRQmA=:eyJlbmRVc2VyIjoiMCIsImNhbGxiYWNrVXJsIjoiaHR0cHM6Ly9iZXRhLmhhbG92ZS5jb20vdjEvY2FsbGJhY2svcWluaXUuanNvbiIsInNhdmVLZXkiOiIkKGVuZFVzZXIpLyQoeDpldmVudCkvJChldGFnKSIsInNjb3BlIjoiaXZvbGxvIiwiY2FsbGJhY2tCb2R5VHlwZSI6ImFwcGxpY2F0aW9uL3gtd3d3LWZvcm0tdXJsZW5jb2RlZCIsImNhbGxiYWNrSG9zdCI6ImJldGEuaGFsb3ZlLmNvbSIsImNhbGxiYWNrQm9keSI6ImZpbGVuYW1lXHUwMDNkJChmbmFtZSlcdTAwMjZmaWxlc2l6ZVx1MDAzZCQoZnNpemUpXHUwMDI2dXNlcklkXHUwMDNkJChlbmRVc2VyKVx1MDAyNmtleVx1MDAzZCQoa2V5KVx1MDAyNmJ1Y2tldFx1MDAzZCQoYnVja2V0KVx1MDAyNmV2ZW50XHUwMDNkJCh4OmV2ZW50KVx1MDAyNmV4dHJhXHUwMDNkJCh4OmV4dHJhKVx1MDAyNnR5cGVcdTAwM2QkKHg6dHlwZSlcdTAwMjZhbGJ1bUlkXHUwMDNkJCh4OmFsYnVtSWQpXHUwMDI2ZXZlbnRJZFx1MDAzZCQoeDpldmVudElkKVx1MDAyNnJlc291cmNlSWRcdTAwM2QkKHg6cmVzb3VyY2VJZClcdTAwMjZhdmluZm9cdTAwM2QkKGF2aW5mbylcdTAwMjZtdFx1MDAzZCQobWltZVR5cGUpXHUwMDI2ZXhpZlx1MDAzZCQoZXhpZilcdTAwMjZpbWFnZUluZm9cdTAwM2QkKGltYWdlSW5mbylcdTAwMjZ0YXJnZXRVc2VySWRcdTAwM2QkKHg6dGFyZ2V0VXNlcklkKVx1MDAyNmdyb3VwSWRcdTAwM2QkKHg6Z3JvdXBJZClcdTAwMjZjb21tZW50SWRcdTAwM2QkKHg6Y29tbWVudElkKVx1MDAyNmV4cHJlc3Npb25JZFx1MDAzZCQoeDpleHByZXNzaW9uSWQpIiwiZGVhZGxpbmUiOjE1MzE4MTMzNTd9'
+    }
+  },
+  methods:{
+    onSuccess(){
+      console.log(arguments)
+    },
+    onError(error){
+      console.log(error)
+    },
+    onProgress(res){
+      this.percent = res.total.percent.toFixed(2)
+      console.log(res.total)
+    }
+  },
   components: {
-    HelloWorld
+    Upload
   }
 }
 </script>
