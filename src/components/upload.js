@@ -16,10 +16,6 @@ export default {
     data: {
       type: Object
     },
-    percent:{
-      type:Number,
-      default: 0
-    },
     qiniuToken: {
       type: String,
       required:true
@@ -76,16 +72,42 @@ export default {
       }
     }
   },
+  data(){
+    return {
+      percent:0,
+      uploadStatus: 2, // -1上传中  0 上传失败  1 上传成功， 2.空闲
+      errorMsg:''
+    }
+  },
   components:{
     progressBar
   },
   methods: {
+    handleProgress(res){
+      this.onProgress(res)
+      this.uploadStatus = -1
+      this.percent = +res.total.percent.toFixed(1)
+    },
+    /**
+     * @name handleError
+     * @description 错误回掉
+     */
+    handleError(error){
+      this.uploadStatus = 0
+      this.onError(error)
+      this.errorMsg = error.message
+    },
+    handleSuccess(res){
+      this.uploadStatus = 1
+      this.onSuccess(res)
+    },
     /**
      * @name uploadFiles
      * @description 上传文件列表，文件列表长度限制， 文件长度超出回调函数, 是否立即上传
      * @param [file] files
      */
     uploadFiles(files) {
+      this.percent=0
       if(this.limit && this.fileList.length+files.length>this.limit){
         this.onExceed && this.onExceed(files,this.fileList);
         return
@@ -164,7 +186,7 @@ export default {
   },
   post(file) {
     let observable = qiniu.upload(file, `${this.path}/${file.name}`, this.qiniuToken, this.putExtra, this.config)
-    let subscription = observable.subscribe(this.onProgress, this.onError, this.onSuccess)
+    let subscription = observable.subscribe(this.handleProgress, this.handleError, this.handleSuccess)
   }
   },
 }

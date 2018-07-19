@@ -2,7 +2,11 @@
 import upload from './upload'
 export default {
   props:{
-    drag: Boolean // 是否允许拖拽上传
+    drag: Boolean, // 是否允许拖拽上传
+    progressShow:{
+      type: Boolean,
+      default: true
+    }
   },
   mixins:[upload],
   methods:{
@@ -19,20 +23,14 @@ export default {
     }
   },
   render (h) {
-    const attr = {
-      class:{
-        'upload':true
-      },
-      on:{
-        click: this.handleClick,
-      }
-    }
     return(
-    <div {...attr}>
+    <div class="upload">
       <input style={{display:'none'}} ref="upload" type="file" on-change={this.handleChange}/>
-      {this.$slots.default}
-      <progress-bar percent={this.percent}></progress-bar>
-      
+      <div on-click={this.handleClick}>{this.$slots.default}</div>
+      {this.uploadStatus !== 2 && this.progressShow?
+      <progress-bar abort={this.handleClick} status={this.uploadStatus}  percent={this.percent}></progress-bar>: ''}
+      {this.uploadStatus === 0?`上传失败：${this.errorMsg}`:''}
+      {this.uploadStatus === 1?'上传成功':''}
     </div>
     )
   }
